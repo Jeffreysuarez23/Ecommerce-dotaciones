@@ -1,0 +1,70 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "E-Commerce API",
+  "dateExport": "2026-05-06",
+  "version": "1.1",
+  "folders": [
+    {
+      "name": "Productos",
+      "requests": []
+    },
+    {
+      "name": "Variantes",
+      "requests": [
+        {
+          "name": "Crear Variante Producto",
+          "method": "POST",
+          "url": "http://localhost:8000/api/variantes",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"producto_id\": 1,\n  \"color\": \"Rojo\",\n  \"talla\": \"M\",\n  \"stock\": 50,\n  \"sku\": \"PROD-001-ROJO-M\",\n  \"precio_extra\": 5.50,\n  \"lona_id\": null\n}"
+          },
+          "tests": []
+        },
+        {
+          "name": "Crear Variante con Lona",
+          "method": "POST",
+          "url": "http://localhost:8000/api/variantes",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"producto_id\": 1,\n  \"lona_id\": 2,\n  \"color\": \"Azul\",\n  \"talla\": \"L\",\n  \"stock\": 30,\n  \"sku\": \"PROD-001-AZUL-L\",\n  \"precio_extra\": 7.50\n}"
+          },
+          "tests": []
+        },
+        {
+          "name": "Crear Variante Mínima",
+          "method": "POST",
+          "url": "http://localhost:8000/api/variantes",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"producto_id\": 1,\n  \"color\": \"Negro\",\n  \"talla\": \"S\"\n}"
+          },
+          "tests": []
+        }
+      ]
+    }
+  ],
+  "requests": []
+}
