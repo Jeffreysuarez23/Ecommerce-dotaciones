@@ -1,0 +1,51 @@
+/* frontend/src/assets/css/animations.css */
+
+/* Base class for all revealed elements */
+.reveal-base {
+  /* Default transition settings - can be overridden inline if needed */
+  transition-duration: 0.8s;
+  transition-timing-function: cubic-bezier(0.5, 0, 0, 1); /* Smooth easing */
+  transition-property: opacity, transform;
+  will-change: opacity, transform; /* Optimize hardware acceleration */
+}
+
+/* 
+  Initial States (Before entering viewport)
+*/
+.fade-up {
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.fade-in {
+  opacity: 0;
+}
+
+.slide-left {
+  opacity: 0;
+  transform: translateX(40px);
+}
+
+.slide-right {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+/* 
+  Active State (When element is intersecting)
+*/
+.is-revealed {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* 
+  Accessibility: Respect user preference for reduced motion
+*/
+@media screen and (prefers-reduced-motion: reduce) {
+  .reveal-base {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
