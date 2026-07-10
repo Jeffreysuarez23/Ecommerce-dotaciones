@@ -67,10 +67,14 @@ class ImagenProductoController extends Controller
             ? $request->orden
             : ImagenProducto::where('producto_id', $request->producto_id)->count();
 
-        // Guardar archivo físico en public/images/productos
+        // Subir archivo a Supabase Storage
         $imageName = time() . '_' . uniqid() . '.' . $request->image->extension();
-        $request->image->move(public_path('images/productos'), $imageName);
-        $url = asset('images/productos/' . $imageName);
+        
+        // Guardar el archivo en Supabase
+        \Illuminate\Support\Facades\Storage::disk('supabase')->put($imageName, file_get_contents($request->image));
+        
+        // Obtener la URL pública oficial desde el disco de Supabase
+        $url = \Illuminate\Support\Facades\Storage::disk('supabase')->url($imageName);
 
         $imagen = ImagenProducto::create([
             'producto_id' => $request->producto_id,

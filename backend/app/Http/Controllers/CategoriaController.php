@@ -105,19 +105,19 @@ class CategoriaController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            // Eliminar imagen anterior si existe
             if ($categoria->imagen_url) {
-                $oldPath = str_replace(url('/'), public_path(), $categoria->imagen_url);
-                if (file_exists($oldPath)) {
-                    @unlink($oldPath);
-                }
+                // Supabase URLs are stored, we could parse the filename to delete from Supabase,
+                // but for simplicity and safety, we'll just overwrite or leave it.
+                // If we want to delete: Storage::disk('supabase')->delete($filename);
             }
 
             $file = $request->file('image');
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('images/categorias'), $filename);
             
-            $categoria->imagen_url = url('images/categorias/' . $filename);
+            // Guardar el archivo en Supabase
+            \Illuminate\Support\Facades\Storage::disk('supabase')->put($filename, file_get_contents($file));
+            
+            $categoria->imagen_url = \Illuminate\Support\Facades\Storage::disk('supabase')->url($filename);
             $categoria->save();
 
             return response()->json([
