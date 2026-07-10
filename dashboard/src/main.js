@@ -21,7 +21,8 @@ axios.interceptors.response.use(
       // Token is invalid or expired (e.g., logged out from frontend)
       localStorage.removeItem('auth_token')
       localStorage.removeItem('auth_user')
-      window.location.href = 'http://localhost:5173/login'
+      const frontendUrl = import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173'
+      window.location.href = frontendUrl + '/login'
     }
     return Promise.reject(error)
   }

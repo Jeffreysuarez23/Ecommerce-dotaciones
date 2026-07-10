@@ -59,7 +59,7 @@ const router = createRouter({
 // Super Validación: Proteger el acceso solo a administradores
 router.beforeEach((to, from, next) => {
   const authUser = localStorage.getItem('auth_user')
-  const frontendUrl = window.location.port === '5174' ? 'http://localhost:5173' : window.location.origin
+  const frontendUrl = import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173'
   
   if (!authUser) {
     // No ha iniciado sesión, devolver al login
