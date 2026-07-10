@@ -58,8 +58,9 @@ const router = createRouter({
 
 // Super Validación: Proteger el acceso solo a administradores
 router.beforeEach((to, from, next) => {
-  const authUser = localStorage.getItem('auth_user')
-  const frontendUrl = import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173'
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  const defaultFrontend = isLocalhost ? 'http://localhost:5173' : 'https://ecommerce-dotaciones.vercel.app'
+  const frontendUrl = import.meta.env.VITE_FRONTEND_URL || defaultFrontend
   
   if (!authUser) {
     // No ha iniciado sesión, devolver al login
