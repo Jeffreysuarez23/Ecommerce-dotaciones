@@ -100,6 +100,7 @@
               >
                 <span>{{ size.label }}</span>
                 <span v-if="size.stock !== undefined" class="size-btn__stock">{{ size.stock }} uds</span>
+                <span v-if="size.precio_extra > 0" class="size-btn__extra">+{{ formatPrice(size.precio_extra) }}</span>
               </button>
             </div>
           </div>
@@ -335,7 +336,13 @@ export default {
               const key = `${vColorUpper}-${v.talla}`
               // Siempre tomamos v.stock (de variante_producto) como pidió el usuario
               if (!sizesMapUnique[key]) {
-                sizesMapUnique[key] = { label: v.talla, color: vColor, stock: v.stock, inStock: v.stock > 0 }
+                sizesMapUnique[key] = { 
+                  label: v.talla, 
+                  color: vColor, 
+                  stock: v.stock, 
+                  inStock: v.stock > 0,
+                  precio_extra: parseFloat(v.precio_extra) || 0
+                }
               }
             }
           })
@@ -750,6 +757,16 @@ export default {
   font-weight: 400;
   color: #888;
   font-size: 11px;
+}
+
+.size-btn__extra {
+  font-weight: 500;
+  color: #2e7d32;
+  font-size: 11px;
+  background: #e8f5e9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 4px;
 }
 
 .size-btn:hover:not(:disabled) {
