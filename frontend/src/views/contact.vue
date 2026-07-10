@@ -187,7 +187,7 @@ export default {
       this.error = ''
 
       try {
-        await axios.post((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/contactos', this.form)
+        await axios.post((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/contactos', this.form)
         this.submitted = true
         
         // Alerta de confirmación para el usuario con estilo

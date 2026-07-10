@@ -176,7 +176,7 @@ const fetchCart = async () => {
   if (!cartId) return
 
   try {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/carritos/${cartId}`)
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')}/carritos/${cartId}`)
     if (data && data.items) {
       cartItems.value = data.items.map(item => {
         const v = item.variante
@@ -247,7 +247,7 @@ const updateQuantity = async (id, newQuantity) => {
     
     item.quantity = newQuantity
     try {
-      await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/carrito-items/${id}`, { cantidad: newQuantity })
+      await axios.put(`${import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')}/carrito-items/${id}`, { cantidad: newQuantity })
       await updateCartCount()
     } catch (error) {
       console.error('Error updating quantity:', error)
@@ -257,7 +257,7 @@ const updateQuantity = async (id, newQuantity) => {
 
 const removeItem = async (id) => {
   try {
-    await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/carrito-items/${id}`)
+    await axios.delete(`${import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')}/carrito-items/${id}`)
     cartItems.value = cartItems.value.filter(i => i.id !== id)
     await updateCartCount()
   } catch (error) {

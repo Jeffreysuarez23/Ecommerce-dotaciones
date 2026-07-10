@@ -161,7 +161,7 @@ export default {
       this.userMenuOpen = false
       try {
         const token = localStorage.getItem('auth_token')
-        await axios.post((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/logout', {}, {
+        await axios.post((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/logout', {}, {
           headers: { Authorization: `Bearer ${token}` }
         })
       } catch (e) {

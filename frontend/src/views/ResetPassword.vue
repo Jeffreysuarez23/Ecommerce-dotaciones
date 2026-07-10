@@ -71,7 +71,7 @@
 import axios from 'axios'
 import { useRoute, useRouter } from 'vue-router'
 
-const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + ''
+const API_URL = (import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + ''
 
 export default {
   name: 'ResetPassword',
