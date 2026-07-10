@@ -21,7 +21,9 @@ axios.interceptors.response.use(
       // Token is invalid or expired (e.g., logged out from frontend)
       localStorage.removeItem('auth_token')
       localStorage.removeItem('auth_user')
-      const frontendUrl = import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173'
+      const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      const defaultFrontend = isLocalhost ? 'http://localhost:5173' : 'https://ecommerce-dotaciones.vercel.app'
+      const frontendUrl = import.meta.env.VITE_FRONTEND_URL || defaultFrontend
       window.location.href = frontendUrl + '/login'
     }
     return Promise.reject(error)
