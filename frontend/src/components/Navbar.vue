@@ -59,6 +59,12 @@
                 <span class="navbar__dropdown-email">{{ userEmail }}</span>
               </div>
               <div class="navbar__dropdown-divider"></div>
+              <!-- Admin Dashboard Link -->
+              <a v-if="isAdmin" href="http://localhost:5174" target="_blank" class="navbar__dropdown-item navbar__dropdown-item--admin" @click="userMenuOpen = false">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                Panel Admin
+              </a>
+              <div v-if="isAdmin" class="navbar__dropdown-divider"></div>
               <router-link to="/my-account" class="navbar__dropdown-item" @click="userMenuOpen = false">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Mi Cuenta
@@ -130,6 +136,9 @@ export default {
     },
     userInitial() {
       return this.userName.charAt(0).toUpperCase()
+    },
+    isAdmin() {
+      return ['admin', 'super_admin'].includes(this.currentUser?.rol)
     }
   },
   mounted() {
@@ -611,6 +620,29 @@ export default {
 .navbar__dropdown-item--logout:hover {
   background: #fef2f2;
   color: #b91c1c;
+}
+
+/* Admin button */
+.navbar__dropdown-item--admin {
+  color: #1a1a1a;
+  font-weight: 600;
+  background: linear-gradient(135deg, #f8f6f3 0%, #ede8de 100%);
+  border-radius: 8px;
+  margin: 2px 8px;
+  padding: 11px 14px !important;
+  width: auto;
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.navbar__dropdown-item--admin:hover {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.navbar__dropdown-item--admin:hover svg {
+  stroke: #ffffff;
 }
 
 /* Dropdown transition */

@@ -13,7 +13,7 @@ class DashboardController extends Controller
 {
     public function resumen()
     {
-        $ventasTotales = Orden::sum('total');
+        $ventasTotales = Orden::where('estado', '!=', 'cancelada')->sum('total');
 
         $totalOrdenes = Orden::count();
 
@@ -47,6 +47,26 @@ class DashboardController extends Controller
             )
             ->get();
 
+        $lonasActivas = \App\Models\Lona::where('activa', 1)->count();
+        $lonasInactivas = \App\Models\Lona::where('activa', 0)->count();
+        
+        $ventas7Dias = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = \Carbon\Carbon::now()->subDays($i)->toDateString();
+            $total = Orden::whereDate('creado_en', $date)
+                ->where('estado', '!=', 'cancelada')
+                ->sum('total');
+            $ventas7Dias[] = [
+                'fecha' => $date,
+                'total' => $total
+            ];
+        }
+
+        $pedidosRecientes = Orden::with('usuario')
+            ->orderBy('creado_en', 'desc')
+            ->limit(4)
+            ->get();
+
         return response()->json([
             'ventas_totales' => $ventasTotales,
             'total_ordenes' => $totalOrdenes,
@@ -54,7 +74,11 @@ class DashboardController extends Controller
             'total_usuarios' => $totalUsuarios,
             'ordenes_por_estado' => $ordenesPorEstado,
             'productos_mas_vendidos' => $productosMasVendidos,
-            'stock_bajo' => $stockBajo
+            'stock_bajo' => $stockBajo,
+            'lonas_activas' => $lonasActivas,
+            'lonas_inactivas' => $lonasInactivas,
+            'ventas_7_dias' => $ventas7Dias,
+            'pedidos_recientes' => $pedidosRecientes
         ]);
     }
 }
