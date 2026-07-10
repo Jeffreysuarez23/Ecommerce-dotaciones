@@ -318,7 +318,7 @@ const form = reactive(emptyForm())
 
 const fetchUsuarios = async () => {
   try {
-    const { data } = await axios.get('http://localhost:8000/api/usuarios')
+    const { data } = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/usuarios')
     usuarios.value = data
   } catch (error) {
     console.error('Error fetching users:', error)
@@ -404,12 +404,12 @@ const submitForm = async () => {
         saving.value = false
         return
       }
-      const { data } = await axios.put(`http://localhost:8000/api/usuarios/${form.id}`, form)
+      const { data } = await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/usuarios/${form.id}`, form)
       const idx = usuarios.value.findIndex(u => u.id === form.id)
       if (idx !== -1) usuarios.value[idx] = data.usuario
       successMsg.value = 'Usuario actualizado correctamente.'
     } else {
-      const { data } = await axios.post('http://localhost:8000/api/usuarios', form)
+      const { data } = await axios.post((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/usuarios', form)
       if (!data.usuario.creado_en) data.usuario.creado_en = new Date().toISOString()
       usuarios.value.push(data.usuario)
       successMsg.value = 'Usuario creado correctamente.'
@@ -446,7 +446,7 @@ const executeDelete = async () => {
   successMsg.value = ''
 
   try {
-    await axios.delete(`http://localhost:8000/api/usuarios/${userToDelete.value.id}`)
+    await axios.delete(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/usuarios/${userToDelete.value.id}`)
     usuarios.value = usuarios.value.filter(u => u.id !== userToDelete.value.id)
     successMsg.value = 'Usuario eliminado correctamente.'
     showDeleteModal.value = false

@@ -143,7 +143,7 @@ export default {
           return
         }
 
-        const { data } = await axios.get('http://localhost:8000/api/profile', {
+        const { data } = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/profile', {
           headers: { Authorization: `Bearer ${token}` }
         })
         
@@ -177,7 +177,7 @@ export default {
           payload.password_confirmation = this.form.password_confirmation
         }
 
-        const { data } = await axios.put('http://localhost:8000/api/profile', payload, {
+        const { data } = await axios.put((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/profile', payload, {
           headers: { Authorization: `Bearer ${token}` }
         })
 
@@ -207,7 +207,7 @@ export default {
 
       try {
         const token = localStorage.getItem('auth_token')
-        await axios.delete('http://localhost:8000/api/profile', {
+        await axios.delete((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/profile', {
           headers: { Authorization: `Bearer ${token}` }
         })
 

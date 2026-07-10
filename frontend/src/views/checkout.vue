@@ -316,7 +316,7 @@ import { updateCartCount } from '../cartState'
 const router = useRouter()
 const route = useRoute()
 
-const API = 'http://localhost:8000/api'
+const API = (import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + ''
 
 const steps = ['Envío', 'Pago', 'Revisión']
 const currentStep = ref(0)

@@ -134,7 +134,7 @@ import { state, actions } from '../store/state.js'
 defineEmits(['toggle-sidebar'])
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api'
+  baseURL: (import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + ''
 })
 
 api.interceptors.request.use(config => {
@@ -223,7 +223,7 @@ const logoutAlert = async () => {
   try {
     const token = localStorage.getItem('auth_token')
     if (token) {
-      await axios.post('http://localhost:8000/api/logout', {}, {
+      await axios.post((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/logout', {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
