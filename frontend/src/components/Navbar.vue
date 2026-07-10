@@ -60,7 +60,7 @@
               </div>
               <div class="navbar__dropdown-divider"></div>
               <!-- Admin Dashboard Link -->
-              <a v-if="isAdmin" href="http://localhost:5174" target="_blank" class="navbar__dropdown-item navbar__dropdown-item--admin" @click="userMenuOpen = false">
+              <a v-if="isAdmin" :href="dashboardUrl" target="_blank" class="navbar__dropdown-item navbar__dropdown-item--admin" @click="userMenuOpen = false">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                 Panel Admin
               </a>
@@ -139,6 +139,9 @@ export default {
     },
     isAdmin() {
       return ['admin', 'super_admin'].includes(this.currentUser?.rol)
+    },
+    dashboardUrl() {
+      return import.meta.env.VITE_DASHBOARD_URL || 'http://localhost:5174';
     }
   },
   mounted() {

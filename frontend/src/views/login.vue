@@ -235,7 +235,8 @@ export default {
       const user = localStorage.getItem('auth_user') || ''
       const token = localStorage.getItem('auth_token') || ''
       const qs = '?auth_user=' + encodeURIComponent(user) + '&auth_token=' + encodeURIComponent(token)
-      window.location.href = window.location.protocol + '//' + window.location.hostname + ':5174/' + qs
+      const dashboardUrl = import.meta.env.VITE_DASHBOARD_URL || 'http://localhost:5174'
+      window.location.href = dashboardUrl + '/' + qs
     },
     async handleSubmit() {
       this.errorMsg = ''
