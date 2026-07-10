@@ -139,7 +139,7 @@ export default {
   methods: {
     async fetchCategories() {
       try {
-        const { data } = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/categorias')
+        const { data } = await axios.get((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/categorias')
         if (data && Array.isArray(data)) {
           const flatList = []
           const flatten = (cats) => {
@@ -161,7 +161,7 @@ export default {
       this.loading = true
       this.error = ''
       try {
-        const { data } = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/productos')
+        const { data } = await axios.get((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/productos')
         const publicados = data.filter(p => p.publicado === 1)
         this.products = publicados.map(p => {
           let badge = null

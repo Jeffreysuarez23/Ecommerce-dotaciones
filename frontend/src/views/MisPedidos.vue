@@ -160,7 +160,7 @@ const fetchPedidos = async () => {
   }
 
   try {
-    const { data } = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/mis-pedidos', {
+    const { data } = await axios.get((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/mis-pedidos', {
       headers: { Authorization: `Bearer ${token}` }
     })
     ordenes.value = data.data || []

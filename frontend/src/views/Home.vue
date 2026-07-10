@@ -243,7 +243,7 @@ export default {
     },
     async fetchFeaturedProducts() {
       try {
-        const { data } = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/productos')
+        const { data } = await axios.get((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/productos')
         const destacados = data.filter(p => p.destacado === 1 && p.publicado === 1).slice(0, 4)
         
         this.featuredProducts = destacados.map(p => {
@@ -269,7 +269,7 @@ export default {
     },
     async fetchCategoriasDestacadas() {
       try {
-        const { data } = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/categorias')
+        const { data } = await axios.get((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/categorias')
         
         // Flatten the categories to include subcategories easily
         const flatCategories = []
