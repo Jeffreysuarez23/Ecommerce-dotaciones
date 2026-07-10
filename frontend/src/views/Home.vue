@@ -292,11 +292,12 @@ export default {
         ]
 
         this.categoriasDestacadas = destacadas.map((c, index) => {
+          const isLocalhost = c.imagen_url && c.imagen_url.includes('localhost');
           return {
             id: c.id,
             nombre: c.nombre,
             link: '/products?category=' + encodeURIComponent(c.nombre),
-            image: c.imagen_url ? c.imagen_url : placeholderImages[index % placeholderImages.length]
+            image: (c.imagen_url && !isLocalhost) ? c.imagen_url : placeholderImages[index % placeholderImages.length]
           }
         })
       } catch (error) {
