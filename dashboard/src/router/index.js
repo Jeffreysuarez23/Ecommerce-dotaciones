@@ -62,6 +62,8 @@ router.beforeEach((to, from, next) => {
   const defaultFrontend = isLocalhost ? 'http://localhost:5173' : 'https://ecommerce-dotaciones.vercel.app'
   const frontendUrl = import.meta.env.VITE_FRONTEND_URL || defaultFrontend
   
+  const authUser = localStorage.getItem('auth_user')
+  
   if (!authUser) {
     // No ha iniciado sesión, devolver al login
     window.location.href = frontendUrl + '/login'

@@ -110,7 +110,7 @@
           <router-link to="/account" class="dropdown-menu-item" @click="showProfileDropdown = false">
             Configuración Cuenta
           </router-link>
-          <a href="http://localhost:5173" target="_blank" class="dropdown-menu-item dropdown-menu-item--store">
+          <a :href="frontendUrl" target="_blank" class="dropdown-menu-item dropdown-menu-item--store">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             Ver Tienda
           </a>
@@ -148,6 +148,10 @@ api.interceptors.request.use(config => {
 const searchQuery = ref('')
 const showNotifDropdown = ref(false)
 const showProfileDropdown = ref(false)
+
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const defaultFrontend = isLocalhost ? 'http://localhost:5173' : 'https://ecommerce-dotaciones.vercel.app'
+const frontendUrl = import.meta.env.VITE_FRONTEND_URL || defaultFrontend
 
 const authUser = ref({
   nombre: 'Cargando...',
@@ -235,7 +239,7 @@ const logoutAlert = async () => {
     localStorage.removeItem('auth_token')
     localStorage.removeItem('auth_user')
     showProfileDropdown.value = false
-    window.location.href = 'http://localhost:5173/login'
+    window.location.href = frontendUrl + '/login'
   }
 }
 
