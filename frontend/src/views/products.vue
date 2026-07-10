@@ -162,7 +162,7 @@ export default {
       this.error = ''
       try {
         const { data } = await axios.get((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/productos')
-        const publicados = data.filter(p => p.publicado === 1)
+        const publicados = data.filter(p => p.publicado === 1 || p.publicado === true)
         this.products = publicados.map(p => {
           let badge = null
           if (!p.publicado) {
@@ -182,7 +182,7 @@ export default {
             rating: 5.0, // Dato simulado, ajusta según la db real
             reviews: 0,
             image: p.imagenes && p.imagenes.length > 0 
-              ? (p.imagenes.find(img => img.es_portada === 1)?.url || p.imagenes[0].url)
+              ? (p.imagenes.find(img => img.es_portada === 1 || img.es_portada === true)?.url || p.imagenes[0].url)
               : 'https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=600&q=80'
           }
         })

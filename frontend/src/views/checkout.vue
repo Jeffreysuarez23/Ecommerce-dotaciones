@@ -348,7 +348,7 @@ const fetchCart = async () => {
 
         let image = 'https://via.placeholder.com/400'
         if (p.imagenes && p.imagenes.length > 0) {
-          const cover = p.imagenes.find(img => img.es_portada === 1)
+          const cover = p.imagenes.find(img => img.es_portada === 1 || img.es_portada === true)
           image = cover ? cover.url : p.imagenes[0].url
         }
 
