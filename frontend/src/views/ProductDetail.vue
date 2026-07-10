@@ -114,13 +114,16 @@
                 </svg>
               </button>
               <span class="qty-value">{{ quantity }}</span>
-              <button class="qty-btn" @click="quantity++">
+              <button class="qty-btn" @click="quantity < (selectedSizeObj ? selectedSizeObj.stock : 99) && quantity++">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <line x1="12" y1="5" x2="12" y2="19"/>
                   <line x1="5" y1="12" x2="19" y2="12"/>
                 </svg>
               </button>
             </div>
+            <span v-if="selectedSizeObj" style="margin-left: 15px; font-size: 13px; color: #888;">
+              ({{ selectedSizeObj.stock }} disponibles)
+            </span>
           </div>
 
           <div class="detail__divider"></div>
@@ -254,6 +257,10 @@ export default {
       const sizesForColor = this.product.sizes.filter(s => s.color.toUpperCase() === this.selectedColor.toUpperCase())
       
       return sizesForColor.length > 0 ? sizesForColor : this.product.sizes
+    },
+    selectedSizeObj() {
+      if (!this.selectedSize || !this.availableSizes) return null
+      return this.availableSizes.find(s => s.label === this.selectedSize)
     }
   },
   watch: {
@@ -321,7 +328,7 @@ export default {
         const sizesMapUnique = {}
         if (data.variantes) {
           data.variantes.forEach(v => {
-            const vColor = (v.color && v.color !== 'Defecto') ? v.color : (v.lona ? v.lona.color : v.color)
+            const vColor = (v.color && v.color !== 'Defecto') ? v.color : (v.lona && v.lona.color ? v.lona.color : 'Defecto')
             const vColorUpper = vColor ? vColor.toUpperCase() : 'DEFAULT'
             
             if (v.talla) {
