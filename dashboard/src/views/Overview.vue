@@ -105,33 +105,33 @@
         </div>
       </div>
 
-      <!-- Metric 4: Stock Alerts -->
+      <!-- Metric 4: Inactive Lonas -->
       <div class="card metric-card">
         <div class="metric-card__header">
-          <span class="metric-card__title">Alertas Críticas</span>
+          <span class="metric-card__title">Lonas inactivas</span>
           <span class="metric-card__icon text-danger">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-              <line x1="12" y1="9" x2="12" y2="13"></line>
-              <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
             </svg>
           </span>
         </div>
         <div class="metric-card__body">
-          <h2 class="metric-card__value">{{ lowStockLonasCount }}</h2>
+          <h2 class="metric-card__value">{{ inactiveLonasCount }}</h2>
           <div class="metric-card__trend">
-            <span class="trend-indicator trend-indicator--down" v-if="lowStockLonasCount > 0">
-              Necesita atención
+            <span class="trend-indicator trend-indicator--down" v-if="inactiveLonasCount > 0">
+              Desactivadas
             </span>
             <span class="trend-indicator trend-indicator--up" v-else>
-              Todo en orden
+              Ninguna
             </span>
           </div>
         </div>
         <!-- Sparkline -->
-        <div class="metric-card__sparkline" v-if="lowStockLonasCount > 0">
+        <div class="metric-card__sparkline" v-if="inactiveLonasCount > 0">
           <svg viewBox="0 0 100 20" class="sparkline-svg">
-            <path d="M0,5 L20,15 L40,3 L60,18 L80,12 L100,18" fill="none" stroke="var(--color-danger)" stroke-width="2"></path>
+            <path d="M0,15 L20,10 L40,15 L60,10 L80,15 L100,10" fill="none" stroke="var(--color-danger)" stroke-width="2"></path>
           </svg>
         </div>
         <div class="metric-card__sparkline" v-else>
@@ -160,34 +160,19 @@
             <line x1="40" y1="180" x2="480" y2="180" stroke="var(--color-border)" stroke-width="1.5"></line>
 
             <!-- Line Path -->
-            <path d="M40,160 L110,150 L180,110 L250,130 L320,70 L390,90 L460,40" fill="none" stroke="var(--color-accent)" stroke-width="3" stroke-linecap="round"></path>
+            <path :d="salesPath" fill="none" stroke="var(--color-accent)" stroke-width="3" stroke-linecap="round"></path>
             
             <!-- Area Gradient Fill -->
-            <path d="M40,160 L110,150 L180,110 L250,130 L320,70 L390,90 L460,40 L460,180 L40,180 Z" fill="rgba(122, 106, 83, 0.08)"></path>
+            <path :d="salesAreaPath" fill="rgba(122, 106, 83, 0.08)"></path>
 
             <!-- Chart Nodes -->
-            <circle cx="40" cy="160" r="4" fill="var(--bg-card)" stroke="var(--color-accent)" stroke-width="2"></circle>
-            <circle cx="110" cy="150" r="4" fill="var(--bg-card)" stroke="var(--color-accent)" stroke-width="2"></circle>
-            <circle cx="180" cy="110" r="4" fill="var(--bg-card)" stroke="var(--color-accent)" stroke-width="2"></circle>
-            <circle cx="250" cy="130" r="4" fill="var(--bg-card)" stroke="var(--color-accent)" stroke-width="2"></circle>
-            <circle cx="320" cy="70" r="4" fill="var(--bg-card)" stroke="var(--color-accent)" stroke-width="2"></circle>
-            <circle cx="390" cy="90" r="4" fill="var(--bg-card)" stroke="var(--color-accent)" stroke-width="2"></circle>
-            <circle cx="460" cy="40" r="4" fill="var(--bg-card)" stroke="var(--color-accent)" stroke-width="2"></circle>
+            <circle v-for="(d, i) in apiResumen.ventas_7_dias" :key="'node-'+i" :cx="getPointX(i)" :cy="getPointY(d.total)" r="4" fill="var(--bg-card)" stroke="var(--color-accent)" stroke-width="2"></circle>
 
             <!-- Labels X -->
-            <text x="40" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)">Lun</text>
-            <text x="110" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)">Mar</text>
-            <text x="180" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)">Mie</text>
-            <text x="250" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)">Jue</text>
-            <text x="320" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)">Vie</text>
-            <text x="390" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)">Sab</text>
-            <text x="460" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)">Dom</text>
+            <text v-for="(d, i) in apiResumen.ventas_7_dias" :key="'label-'+i" :x="getPointX(i)" y="195" text-anchor="middle" font-size="10" fill="var(--text-muted)">{{ getDayName(d.fecha) }}</text>
 
             <!-- Labels Y -->
-            <text x="30" y="34" text-anchor="end" font-size="9" fill="var(--text-muted)">600k</text>
-            <text x="30" y="84" text-anchor="end" font-size="9" fill="var(--text-muted)">400k</text>
-            <text x="30" y="134" text-anchor="end" font-size="9" fill="var(--text-muted)">200k</text>
-            <text x="30" y="184" text-anchor="end" font-size="9" fill="var(--text-muted)">0</text>
+            <text v-for="label in yAxisLabels" :key="'y-'+label.y" x="30" :y="label.y" text-anchor="end" font-size="9" fill="var(--text-muted)">{{ label.text }}</text>
           </svg>
         </div>
       </div>
@@ -251,7 +236,7 @@
             <tbody>
               <tr v-for="order in recentOrders" :key="order.id">
                 <td style="font-weight: 600;">{{ order.numero }}</td>
-                <td>{{ getUserName(order.usuario_id) }}</td>
+                <td>{{ order.usuario ? order.usuario.nombre : 'Usuario #' + order.usuario_id }}</td>
                 <td>
                   <span class="badge badge--info">{{ order.tipo_precio }}</span>
                 </td>
@@ -404,8 +389,44 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { state, actions } from '../store/state.js'
+import axios from 'axios'
+
+const apiResumen = ref({
+  lonas_activas: 0,
+  lonas_inactivas: 0,
+  ventas_7_dias: [],
+  pedidos_recientes: []
+})
+
+const unreadNotifications = ref([])
+
+const fetchNotifications = async () => {
+  try {
+    const res = await axios.get('http://localhost:8000/api/notificaciones')
+    unreadNotifications.value = res.data.filter(n => !n.leido_en)
+  } catch (error) {
+    console.error('Error fetching notifications:', error)
+  }
+}
+
+onMounted(async () => {
+  try {
+    // Request is intercepted by main.js to add Bearer token
+    const res = await axios.get('http://localhost:8000/api/dashboard/resumen')
+    apiResumen.value = res.data
+  } catch (error) {
+    console.error('Error fetching dashboard summary:', error)
+  }
+  
+  fetchNotifications()
+  window.addEventListener('notifications-updated', fetchNotifications)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('notifications-updated', fetchNotifications)
+})
 
 // Date string helper
 const todayDateString = computed(() => {
@@ -415,39 +436,57 @@ const todayDateString = computed(() => {
 
 // Metrics computation
 const totalSales = computed(() => {
-  return state.ordenes
-    .filter(o => o.estado !== 'cancelada')
-    .reduce((sum, o) => sum + Number(o.total), 0)
+  return apiResumen.value.ventas_totales || 0
 })
 
-const totalOrdersCount = computed(() => state.ordenes.length)
-const totalLonasCount = computed(() => state.lonas.length)
-
-const lowStockLonasCount = computed(() => {
-  let count = 0
-  state.lonas.forEach(l => {
-    const totalQty = state.lona_tallas
-      .filter(lt => lt.lona_id === l.id)
-      .reduce((sum, lt) => sum + lt.cantidad, 0)
-    
-    const dot = state.dotaciones.find(d => d.id === l.dotacion_id)
-    if (dot && totalQty < dot.min_lonas) {
-      count++
-    }
-  })
-  return count
-})
+const totalOrdersCount = computed(() => apiResumen.value.total_ordenes || 0)
+const totalLonasCount = computed(() => apiResumen.value.lonas_activas)
+const inactiveLonasCount = computed(() => apiResumen.value.lonas_inactivas)
 
 const recentOrders = computed(() => {
-  return [...state.ordenes]
-    .sort((a, b) => new Date(b.creado_en) - new Date(a.creado_en))
-    .slice(0, 4)
+  return apiResumen.value.pedidos_recientes || []
 })
 
-const unreadNotifications = computed(() => {
-  return state.notificaciones
-    .filter(n => !n.leido_en)
-    .sort((a, b) => new Date(b.creado_en) - new Date(a.creado_en))
+// Chart computation logic
+const maxSales = computed(() => {
+  if (!apiResumen.value.ventas_7_dias || apiResumen.value.ventas_7_dias.length === 0) return 600000
+  const max = Math.max(...apiResumen.value.ventas_7_dias.map(d => Number(d.total)))
+  return max > 0 ? max * 1.2 : 600000
+})
+
+const getPointY = (value) => {
+  return 180 - (value / maxSales.value) * 150
+}
+
+const getPointX = (index) => {
+  return 40 + (index * 70)
+}
+
+const salesPath = computed(() => {
+  if (!apiResumen.value.ventas_7_dias) return ''
+  return apiResumen.value.ventas_7_dias.map((d, i) => {
+    return `${i === 0 ? 'M' : 'L'}${getPointX(i)},${getPointY(d.total)}`
+  }).join(' ')
+})
+
+const salesAreaPath = computed(() => {
+  if (!apiResumen.value.ventas_7_dias || apiResumen.value.ventas_7_dias.length === 0) return ''
+  return salesPath.value + ` L${getPointX(apiResumen.value.ventas_7_dias.length - 1)},180 L40,180 Z`
+})
+
+const getDayName = (dateStr) => {
+  const date = new Date(dateStr + 'T00:00:00')
+  return date.toLocaleDateString('es-CO', { weekday: 'short' }).charAt(0).toUpperCase() + date.toLocaleDateString('es-CO', { weekday: 'short' }).slice(1, 3)
+}
+
+const yAxisLabels = computed(() => {
+  const m = maxSales.value
+  return [
+    { y: 34, text: (m/1000).toFixed(0) + 'k' },
+    { y: 84, text: ((m*0.66)/1000).toFixed(0) + 'k' },
+    { y: 134, text: ((m*0.33)/1000).toFixed(0) + 'k' },
+    { y: 184, text: '0' }
+  ]
 })
 
 // Helper methods
@@ -465,7 +504,9 @@ const getOrderUser = (userId) => {
 }
 
 const countOrdersByStatus = (status) => {
-  return state.ordenes.filter(o => o.estado === status).length
+  if (!apiResumen.value.ordenes_por_estado) return 0
+  const stat = apiResumen.value.ordenes_por_estado.find(o => o.estado === status)
+  return stat ? stat.total : 0
 }
 
 const getStatusBadgeClass = (status) => {
@@ -486,12 +527,25 @@ const formatDate = (dateStr) => {
 }
 
 // Notification handlers
-const markAsRead = (id) => {
-  actions.markNotificationRead(id)
+const markAsRead = async (id) => {
+  try {
+    await axios.put(`http://localhost:8000/api/notificaciones/${id}/leer`)
+    await fetchNotifications()
+    window.dispatchEvent(new Event('notifications-updated'))
+  } catch (err) {
+    console.error('Error marking as read:', err)
+  }
 }
 
-const clearAllNotifs = () => {
-  actions.clearNotifications()
+const clearAllNotifs = async () => {
+  try {
+    const promises = unreadNotifications.value.map(n => axios.put(`http://localhost:8000/api/notificaciones/${n.id}/leer`))
+    await Promise.all(promises)
+    await fetchNotifications()
+    window.dispatchEvent(new Event('notifications-updated'))
+  } catch (err) {
+    console.error('Error clearing notifs:', err)
+  }
 }
 
 // Drawer management for Order Details

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class RoleMiddleware
 {
-    public function handle(Request $request, Closure $next, $rol)
+    public function handle(Request $request, Closure $next, ...$roles)
     {
         if (!$request->user()) {
             return response()->json([
@@ -15,7 +15,7 @@ class RoleMiddleware
             ], 401);
         }
 
-        if ($request->user()->rol != $rol) {
+        if (!in_array($request->user()->rol, $roles)) {
             return response()->json([
                 'message' => 'No autorizado'
             ], 403);
