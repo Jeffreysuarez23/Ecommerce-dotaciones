@@ -248,7 +248,7 @@ const getVariant = (item) => {
 const getImage = (item) => {
   const imagenes = item.variante?.producto?.imagenes
   if (imagenes && imagenes.length > 0) {
-    const cover = imagenes.find(img => img.es_portada === 1)
+    const cover = imagenes.find(img => img.es_portada === 1 || img.es_portada === true)
     return cover ? cover.url : imagenes[0].url
   }
   return 'https://via.placeholder.com/80x100/f0ebe3/999?text=Sin+imagen'

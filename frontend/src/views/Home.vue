@@ -244,12 +244,12 @@ export default {
     async fetchFeaturedProducts() {
       try {
         const { data } = await axios.get((import.meta.env.VITE_API_URL || (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:8000/api' : 'https://ecommerce-backend-qqda.onrender.com/api')) + '/productos')
-        const destacados = data.filter(p => p.destacado === 1 && p.publicado === 1).slice(0, 4)
+        const destacados = data.filter(p => (p.destacado === 1 || p.destacado === true) && (p.publicado === 1 || p.publicado === true)).slice(0, 4)
         
         this.featuredProducts = destacados.map(p => {
           let image = 'https://via.placeholder.com/600'
           if (p.imagenes && p.imagenes.length > 0) {
-            const cover = p.imagenes.find(img => img.es_portada === 1)
+            const cover = p.imagenes.find(img => img.es_portada === 1 || img.es_portada === true)
             image = cover ? cover.url : p.imagenes[0].url
           }
 

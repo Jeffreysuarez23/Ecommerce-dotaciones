@@ -337,7 +337,7 @@ export default {
         
         let coverIndex = 0
         if (data.imagenes && data.imagenes.length > 0) {
-          const idx = data.imagenes.findIndex(img => img.es_portada === 1)
+          const idx = data.imagenes.findIndex(img => img.es_portada === 1 || img.es_portada === true)
           if (idx !== -1) coverIndex = idx
         }
         
