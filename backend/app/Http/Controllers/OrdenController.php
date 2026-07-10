@@ -49,25 +49,12 @@ class OrdenController extends Controller
 
                 $subtotal += ($precioFinal * $item->cantidad);
 
-                // Verificar stock en lona_tallas si la variante tiene lona
-                if ($variante->lona_id) {
-                    $lonaTalla = DB::table('lona_tallas')
-                        ->where('lona_id', $variante->lona_id)
-                        ->where('talla', $variante->talla)
-                        ->first();
-
-                    if (!$lonaTalla) {
-                        return response()->json([
-                            'message' => "No hay stock registrado para {$variante->producto->nombre} (Talla: {$variante->talla}, Color: {$variante->color})"
-                        ], 422);
-                    }
-
-                    if ($lonaTalla->cantidad < $item->cantidad) {
-                        $disponible = $lonaTalla->cantidad;
-                        return response()->json([
-                            'message' => "Stock insuficiente para {$variante->producto->nombre} (Talla: {$variante->talla}, Color: {$variante->color}). Disponible: {$disponible}, Solicitado: {$item->cantidad}"
-                        ], 422);
-                    }
+                // Verificar stock directamente en la tabla variante_producto
+                if ($variante->stock < $item->cantidad && !$variante->producto->permitir_sin_stock) {
+                    $disponible = $variante->stock;
+                    return response()->json([
+                        'message' => "Stock insuficiente para {$variante->producto->nombre} (Talla: {$variante->talla}, Color: {$variante->color}). Disponible: {$disponible}, Solicitado: {$item->cantidad}"
+                    ], 422);
                 }
             }
 
@@ -138,23 +125,26 @@ class OrdenController extends Controller
 
             DB::commit();
 
-            // Verificar el stock restante para notificar si se agotó
+            // Descontar stock y notificar si se agotó
             foreach ($carrito->items as $item) {
                 $variante = $item->variante;
-                if ($variante && $variante->lona_id) {
-                    $stockRestante = DB::table('lona_tallas')
-                        ->where('lona_id', $variante->lona_id)
-                        ->where('talla', $variante->talla)
-                        ->value('cantidad');
+                if ($variante) {
+                    // Descontar el stock de la variante
+                    if ($variante->stock >= $item->cantidad) {
+                        $variante->stock -= $item->cantidad;
+                        $variante->save();
+                    }
 
-                    if ($stockRestante !== null && $stockRestante <= 0) {
+                    $stockRestante = $variante->stock;
+
+                    if ($stockRestante <= 0) {
                         Notificacion::create([
                             'usuario_id' => null,
                             'tipo' => 'stock_bajo',
                             'titulo' => 'Producto Agotado',
                             'mensaje' => "El producto {$variante->producto->nombre} (Talla: {$variante->talla}, Color: {$variante->color}) se ha quedado sin stock (0 unidades)."
                         ]);
-                    } elseif ($stockRestante !== null && $stockRestante <= 5) {
+                    } elseif ($stockRestante <= 5) {
                         Notificacion::create([
                             'usuario_id' => null,
                             'tipo' => 'stock_bajo',
