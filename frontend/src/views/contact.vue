@@ -187,7 +187,7 @@ export default {
       this.error = ''
 
       try {
-        await axios.post('http://localhost:8000/api/contactos', this.form)
+        await axios.post((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/contactos', this.form)
         this.submitted = true
         
         // Alerta de confirmación para el usuario con estilo

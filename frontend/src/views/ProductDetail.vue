@@ -274,7 +274,7 @@ export default {
       this.loading = true
       this.error = ''
       try {
-        const { data } = await axios.get(`http://localhost:8000/api/productos/${id}`)
+        const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/productos/${id}`)
         
         const minorista = parseFloat(data.precio_minorista) || 0
         
@@ -385,7 +385,7 @@ export default {
         
         // Si no existe, creamos el carrito
         if (!cartId) {
-          const { data } = await axios.post('http://localhost:8000/api/carritos', {
+          const { data } = await axios.post((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/carritos', {
             session_id: Date.now().toString()
           })
           cartId = data.data.id
@@ -393,7 +393,7 @@ export default {
         }
 
         // Agregamos el item al carrito
-        await axios.post(`http://localhost:8000/api/carritos/${cartId}/items`, {
+        await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/carritos/${cartId}/items`, {
           variante_id: variant.id,
           cantidad: this.quantity
         })

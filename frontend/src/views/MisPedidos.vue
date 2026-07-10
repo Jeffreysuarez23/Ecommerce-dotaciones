@@ -160,7 +160,7 @@ const fetchPedidos = async () => {
   }
 
   try {
-    const { data } = await axios.get('http://localhost:8000/api/mis-pedidos', {
+    const { data } = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/mis-pedidos', {
       headers: { Authorization: `Bearer ${token}` }
     })
     ordenes.value = data.data || []

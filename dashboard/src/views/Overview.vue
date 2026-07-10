@@ -404,7 +404,7 @@ const unreadNotifications = ref([])
 
 const fetchNotifications = async () => {
   try {
-    const res = await axios.get('http://localhost:8000/api/notificaciones')
+    const res = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/notificaciones')
     unreadNotifications.value = res.data.filter(n => !n.leido_en)
   } catch (error) {
     console.error('Error fetching notifications:', error)
@@ -414,7 +414,7 @@ const fetchNotifications = async () => {
 onMounted(async () => {
   try {
     // Request is intercepted by main.js to add Bearer token
-    const res = await axios.get('http://localhost:8000/api/dashboard/resumen')
+    const res = await axios.get((import.meta.env.VITE_API_URL || 'http://localhost:8000/api') + '/dashboard/resumen')
     apiResumen.value = res.data
   } catch (error) {
     console.error('Error fetching dashboard summary:', error)
@@ -529,7 +529,7 @@ const formatDate = (dateStr) => {
 // Notification handlers
 const markAsRead = async (id) => {
   try {
-    await axios.put(`http://localhost:8000/api/notificaciones/${id}/leer`)
+    await axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/notificaciones/${id}/leer`)
     await fetchNotifications()
     window.dispatchEvent(new Event('notifications-updated'))
   } catch (err) {
@@ -539,7 +539,7 @@ const markAsRead = async (id) => {
 
 const clearAllNotifs = async () => {
   try {
-    const promises = unreadNotifications.value.map(n => axios.put(`http://localhost:8000/api/notificaciones/${n.id}/leer`))
+    const promises = unreadNotifications.value.map(n => axios.put(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/notificaciones/${n.id}/leer`))
     await Promise.all(promises)
     await fetchNotifications()
     window.dispatchEvent(new Event('notifications-updated'))

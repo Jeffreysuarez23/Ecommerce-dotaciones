@@ -10,7 +10,7 @@ export const updateCartCount = async () => {
     return
   }
   try {
-    const { data } = await axios.get(`http://localhost:8000/api/carritos/${cartId}`)
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/carritos/${cartId}`)
     if (data && data.items) {
       cartItemCount.value = data.items.reduce((sum, item) => sum + item.cantidad, 0)
     } else {
